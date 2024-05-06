@@ -227,7 +227,7 @@ def run_psiver(pdb_file, chain_id):
 
 def run_csm_potential(pdb_file, chain_id):
     """
-    Run the PSIVER predictor.
+    Run the CsmPotential predictor.
 
     Parameters
     ----------
