@@ -91,6 +91,13 @@ argument_parser.add_argument(
     version=f"Running {argument_parser.prog} v{VERSION}",
 )
 
+argument_parser.add_argument(
+    "-o",
+    "--output_dir",
+    default="output",
+    help="results output directory",
+)
+
 
 def load_args(arguments):
     """
@@ -135,7 +142,7 @@ def maincli():
 
 # ====================================================================================#
 # Main code
-def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
+def main(pdb_file, chain_id, pdb_id, pred, fasta_file, output_dir):
     """
     Execute main function.
 
@@ -151,6 +158,8 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
         List of predictors to run.
     fasta_file : str
         Fasta file.
+    output_dir: str
+        Results output directory
 
     """
     # Start #=========================================================================#
@@ -166,6 +175,7 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
         "chain_id": chain_id,
         "fasta_file": fasta_file,
         "pdb_file": pdb_file,
+        "output_dir": output_dir
     }
     result_dic = {}
 
@@ -187,7 +197,7 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
         threads[predictor] = ThreadReturnVal(
             target=run_prediction, args=predictor, kwargs=data, name=predictor
         )
-
+    
     for predictor in threads:
         try:
             # initiate threads for predictors.
@@ -204,7 +214,13 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
     # Ouput results #==================================================================#
     filename = Path(pdb_file)
 
-    save_file = "output/predictors_" + filename.stem + ".csv"
+    output_path = Path(output_dir)
+
+    if not output_path.exists():
+        output_path.mkdir(parents=True) 
+
+    save_file = output_path.joinpath("predictors_" + filename.stem + ".csv")
+    
     format_output(
         result_dic,
         output_fname=save_file,
@@ -225,7 +241,6 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file):
             log.warning(
                 "Missing predictors: " + ", ".join(ML_PREDICTION[predictor]["needed"])
             )
-
 
 if __name__ == "__main__":
     sys.exit(maincli())
