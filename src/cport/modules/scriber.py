@@ -4,6 +4,8 @@ import re
 import sys
 import tempfile
 import time
+import os
+
 from urllib import request
 
 import mechanicalsoup as ms
@@ -15,8 +17,8 @@ from cport.url import SCRIBER_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 30  # seconds
-NUM_RETRIES = 36
+WAIT_INTERVAL = os.environ.get("SCRIBER_WAIT_INTERVAL") if os.environ.get("SCRIBER_WAIT_INTERVAL") is not None else 30 # seconds
+NUM_RETRIES = os.environ.get("SCRIBER_NUM_RETRIES") if os.environ.get("SCRIBER_NUM_RETRIES") is not None else 36
 
 
 class Scriber:
@@ -37,8 +39,8 @@ class Scriber:
         self.chain_id = chain_id
         self.pdb_file = pdb_file
         self.prediction_dict = {}
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

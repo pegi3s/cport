@@ -5,6 +5,7 @@ import re
 import sys
 import time
 import warnings
+import os
 
 import mechanicalsoup as ms
 from Bio import PDB, BiopythonWarning
@@ -17,8 +18,8 @@ from cport.url import SCANNET_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 30  # seconds
-NUM_RETRIES = 36
+WAIT_INTERVAL = os.environ.get("SCANNET_WAIT_INTERVAL") if os.environ.get("SCANNET_WAIT_INTERVAL") is not None else 30 # seconds
+NUM_RETRIES = os.environ.get("SCANNET_NUM_RETRIES") if os.environ.get("SCANNET_NUM_RETRIES") is not None else 36
 
 
 class ScanNet:
@@ -38,8 +39,8 @@ class ScanNet:
         """
         self.pdb_file = pdb_file
         self.chain_id = chain_id
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

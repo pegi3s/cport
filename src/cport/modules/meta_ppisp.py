@@ -9,6 +9,7 @@ import re
 import sys
 import tempfile
 import time
+import os
 
 import mechanicalsoup as ms
 import pandas as pd
@@ -19,8 +20,8 @@ from cport.url import META_PPISP_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 60  # seconds
-NUM_RETRIES = 300
+WAIT_INTERVAL = os.environ.get("META_PPISP_WAIT_INTERVAL") if os.environ.get("META_PPISP_WAIT_INTERVAL") is not None else 60 # seconds
+NUM_RETRIES = os.environ.get("META_PPISP_NUM_RETRIES") if os.environ.get("META_PPISP_NUM_RETRIES") is not None else 300
 
 
 class MetaPPISP:
@@ -41,8 +42,8 @@ class MetaPPISP:
         self.pdb_file = pdb_file
         self.chain_id = chain_id
         self.prediction_dict = {}
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

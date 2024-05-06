@@ -19,8 +19,8 @@ from cport.url import PREDICTPROTEIN_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 10  # seconds
-NUM_RETRIES = 12
+WAIT_INTERVAL = os.environ.get("PREDICTPROTEIN_WAIT_INTERVAL") if os.environ.get("PREDICTPROTEIN_WAIT_INTERVAL") is not None else 10 # seconds
+NUM_RETRIES = os.environ.get("PREDICTPROTEIN_NUM_RETRIES") if os.environ.get("PREDICTPROTEIN_NUM_RETRIES") is not None else 12
 ELEMENT_LOAD_WAIT = 5  # seconds
 
 
@@ -41,8 +41,8 @@ class Predictprotein:
         """
         self.pdb_id = pdb_id
         self.chain_id = chain_id
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

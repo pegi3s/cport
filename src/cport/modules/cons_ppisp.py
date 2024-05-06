@@ -5,6 +5,7 @@ import re
 import sys
 import tempfile
 import time
+import os
 
 import mechanicalsoup as ms
 import pandas as pd
@@ -15,9 +16,9 @@ from cport.url import CONS_PPISP_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 30  # seconds
+WAIT_INTERVAL = os.environ.get("CONS_PPISP_WAIT_INTERVAL") if os.environ.get("CONS_PPISP_WAIT_INTERVAL") is not None else 30 # seconds
 # any request should never take more than 15min so theoretical max is 90 retries
-NUM_RETRIES = 36
+NUM_RETRIES = os.environ.get("CONS_PPISP_NUM_RETRIES") if os.environ.get("CONS_PPISP_NUM_RETRIES") is not None else 36
 
 
 class ConsPPISP:
@@ -37,8 +38,8 @@ class ConsPPISP:
         """
         self.pdb_file = pdb_file
         self.chain_id = chain_id
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

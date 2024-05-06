@@ -4,6 +4,8 @@ import logging
 import re
 import sys
 import time
+import os
+
 from io import StringIO
 
 import pandas as pd
@@ -15,8 +17,8 @@ from cport.url import PREDICTPROTEIN_API
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 45  # seconds
-NUM_RETRIES = 36
+WAIT_INTERVAL = os.environ.get("PREDICTPROTEIN_WAIT_INTERVAL") if os.environ.get("PREDICTPROTEIN_WAIT_INTERVAL") is not None else 45 # seconds
+NUM_RETRIES = os.environ.get("PREDICTPROTEIN_NUM_RETRIES") if os.environ.get("PREDICTPROTEIN_NUM_RETRIES") is not None else 36
 ELEMENT_LOAD_WAIT = 5  # seconds
 
 
@@ -37,8 +39,8 @@ class Predictprotein:
         """
         self.pdb_file = pdb_file
         self.chain_id = chain_id
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

@@ -3,7 +3,7 @@ import json
 import logging
 import sys
 import time
-
+import os
 import pandas as pd
 import requests
 
@@ -12,8 +12,8 @@ from cport.url import CSM_POTENTIAL_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 30  # seconds
-NUM_RETRIES = 36
+WAIT_INTERVAL = os.environ.get("CSM_POTENTIAL_WAIT_INTERVAL") if os.environ.get("CSM_POTENTIAL_WAIT_INTERVAL") is not None else 30 # seconds
+NUM_RETRIES = os.environ.get("CSM_POTENTIAL_NUM_RETRIES") if os.environ.get("CSM_POTENTIAL_NUM_RETRIES") is not None else 36
 ELEMENT_LOAD_WAIT = 5  # seconds
 
 
@@ -34,8 +34,8 @@ class CsmPotential:
         """
         self.chain_id = chain_id
         self.pdb_file = pdb_file
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """

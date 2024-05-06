@@ -3,6 +3,7 @@ import logging
 import re
 import sys
 import time
+import os
 
 import mechanicalsoup as ms
 
@@ -11,9 +12,9 @@ from cport.url import SPPIDER_URL
 log = logging.getLogger("cportlog")
 
 # Total wait (seconds) = WAIT_INTERVAL * NUM_RETRIES
-WAIT_INTERVAL = 45  # seconds
+WAIT_INTERVAL = os.environ.get("SPPIDER_WAIT_INTERVAL") if os.environ.get("SPPIDER_WAIT_INTERVAL") is not None else 45 # seconds
 # results take up to 5 minutes for 1ppe E, but are usually ready within 2 minutes
-NUM_RETRIES = 36
+NUM_RETRIES = os.environ.get("SPPIDER_NUM_RETRIES") if os.environ.get("SPPIDER_NUM_RETRIES") is not None else 36
 
 
 class Sppider:
@@ -32,8 +33,8 @@ class Sppider:
         """
         self.pdb_file = pdb_file
         self.chain_id = chain_id
-        self.wait = WAIT_INTERVAL
-        self.tries = NUM_RETRIES
+        self.wait = int(WAIT_INTERVAL)
+        self.tries = int(NUM_RETRIES)
 
     def submit(self):
         """
