@@ -10,6 +10,7 @@ import os
 
 from pathlib import Path
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 from Bio import AlignIO, BiopythonWarning
 from Bio.Blast import NCBIWWW
@@ -174,7 +175,7 @@ class Whiscy:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error("WHISCY server is not responding, url was %s", url)
-                sys.exit()
+                raise ServerConnectionException("WHISCY server is not responding, url was %s", url)
 
         active_residues_list = re.split(
             r"\,",

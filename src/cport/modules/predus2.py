@@ -7,6 +7,7 @@ import sys
 import tempfile
 import time
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 import pandas as pd
 import requests
@@ -126,7 +127,7 @@ class Predus2:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"PredUs2 server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"PredUs2 server is not responding, url was {url}")
 
         # once the server is running again, check if this is the correct url format!
         pdb_name = str(self.pdb_file)[-8:-4]

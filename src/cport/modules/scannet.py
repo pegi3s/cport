@@ -7,6 +7,7 @@ import time
 import warnings
 import os
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 from Bio import PDB, BiopythonWarning
 
@@ -109,7 +110,7 @@ class ScanNet:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"ScanNet server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"ScanNet server is not responding, url was {url}")
 
         return url
 

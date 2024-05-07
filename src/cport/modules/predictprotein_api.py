@@ -11,6 +11,7 @@ from io import StringIO
 import pandas as pd
 import requests
 
+from cport.exceptions import ServerConnectionException
 from cport.modules.utils import get_fasta_from_pdbfile
 from cport.url import PREDICTPROTEIN_API
 
@@ -80,7 +81,7 @@ class Predictprotein:
                 log.error(
                     f"predictprotein server is not responding, sequence was {sequence}"
                 )
-                sys.exit()
+                raise ServerConnectionException(f"predictprotein server is not responding, sequence was {sequence}")
 
         return results.text
 

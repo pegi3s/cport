@@ -8,6 +8,7 @@ import os
 
 from urllib import request
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 import pandas as pd
 
@@ -74,7 +75,7 @@ class Scriber:
         submitted_url = re.findall(r"(http:.*)\"", str(links))[0]
         if not submitted_url:
             log.error("SCRIBER submission failed")
-            sys.exit()
+            raise ServerConnectionException("SCRIBER submission failed")
 
         return submitted_url
 
@@ -119,7 +120,7 @@ class Scriber:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"SCRIBER server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"SCRIBER server is not responding, url was {url}")
 
         result_csv_link = re.search(r"(http:.*csv)", str(browser.page))[0]
 

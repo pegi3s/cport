@@ -8,6 +8,7 @@ import time
 import zipfile
 
 import pandas as pd
+from cport.exceptions import ServerConnectionException
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
@@ -139,7 +140,7 @@ class Predictprotein:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"Predict Protein server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"Predict Protein server is not responding, url was {url}"
 
         log.info("Retreiving the Predict Protein results")
 

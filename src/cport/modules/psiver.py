@@ -12,6 +12,7 @@ import os
 
 from io import StringIO
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 import pandas as pd
 import requests
@@ -113,7 +114,7 @@ class Psiver:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"PSIVER server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"PSIVER server is not responding, url was {url}")
 
         if page_text:
             final_url = url

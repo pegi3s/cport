@@ -5,6 +5,7 @@ import sys
 import time
 import os
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 
 from cport.url import SPPIDER_URL
@@ -61,7 +62,7 @@ class Sppider:
 
         if not submitted_url:
             log.error("SPPIDER submission failed")
-            sys.exit()
+            raise ServerConnectionException("SPPIDER submission failed")
 
         browser.close()
 
@@ -112,7 +113,7 @@ class Sppider:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error("SPPIDER server is not responding, url was %s", url)
-                sys.exit()
+                raise ServerConnectionException("SPPIDER server is not responding, url was %s", url)
 
         # the page contains the correct link, which automatically opens in a browser
         #  soup browser is an exception so url needs to be extracted and opened

@@ -8,6 +8,7 @@ import os
 
 from urllib import request
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 import pandas as pd
 
@@ -68,7 +69,7 @@ class Ispred4:
 
         if not job_id:
             log.error("ISPRED4 submission failed")
-            sys.exit()
+            raise ServerConnectionException("ISPRED4 submission failed")
 
         browser.close()
 
@@ -125,7 +126,8 @@ class Ispred4:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"ISPRED4 server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"ISPRED4 server is not responding, url was {url}")
+                    
 
         download_url = f"{ISPRED4_URL}downloadjob?jobid={job_id}"
 

@@ -14,6 +14,7 @@ from Bio import PDB, BiopythonWarning, SeqIO
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", BiopythonWarning)
 
+from cport.exceptions import ChainException
 from cport.url import PDB_FASTA_URL, PDB_URL
 
 log = logging.getLogger("cportlog")
@@ -82,7 +83,7 @@ def get_fasta_from_pdbid(pdb_id, chain_id):
 
     if chain_id not in seq_dic:
         log.error("Could not find chain %s in %s", chain_id, pdb_id)
-        sys.exit()
+        raise ChainException("Could not find chain %s in %s", chain_id, pdb_id)
     else:
         return fasta_seq
 

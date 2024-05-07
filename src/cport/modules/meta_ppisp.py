@@ -11,6 +11,7 @@ import tempfile
 import time
 import os
 
+from cport.exceptions import ServerConnectionException
 import mechanicalsoup as ms
 import pandas as pd
 import requests
@@ -118,7 +119,7 @@ class MetaPPISP:
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
                 log.error(f"meta-PPISP server is not responding, url was {url}")
-                sys.exit()
+                raise ServerConnectionException(f"meta-PPISP server is not responding, url was {url}")
 
         return url
 

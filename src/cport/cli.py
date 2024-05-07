@@ -14,6 +14,9 @@ from cport.modules.threadreturn import ThreadReturnVal
 from cport.modules.utils import format_output
 from cport.version import VERSION
 
+from cport.exceptions import ServerConnectionException
+from cport.exceptions import ChainException
+
 # Setup logging
 log = logging.getLogger("cportlog")
 ch = logging.StreamHandler()
@@ -205,12 +208,15 @@ def main(pdb_file, chain_id, pdb_id, pred, fasta_file, output_dir):
         except Exception as thrown_exception:
             log.error(f"Error running {predictor}")
             log.error(thrown_exception)
-            sys.exit(1)
+            threads.pop(predictor)
+            
 
     for predictor in threads:
         # retrieve results from predictions with modified join
-        result_dic[predictor] = threads[predictor].join()
-
+        try:
+            result_dic[predictor] = threads[predictor].join()
+        except (ServerConnectionException, ChainException) as e:
+            print("Error:", e)
     # Ouput results #==================================================================#
     filename = Path(pdb_file)
 

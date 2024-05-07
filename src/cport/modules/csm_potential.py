@@ -7,6 +7,7 @@ import os
 import pandas as pd
 import requests
 
+from cport.exceptions import ServerConnectionException
 from cport.url import CSM_POTENTIAL_URL
 
 log = logging.getLogger("cportlog")
@@ -58,7 +59,7 @@ class CsmPotential:
             job_id = response["job_id"]
         else:
             # failed submission
-            sys.exit()
+            raise ServerConnectionException("CSM-Potential submission failed")
         return job_id
 
     def retrieve_prediction(self, job_id=None):
@@ -87,10 +88,8 @@ class CsmPotential:
 
             if self.tries == 0:
                 # if tries is 0, then the server is not responding
-                log.error(
-                    f"CSM-Potential server is not responding, job id was {job_id}"
-                )
-                sys.exit()
+                log.error(f"CSM-Potential server is not responding, job id was {job_id}")
+                raise ServerConnectionException(f"CSM-Potential server is not responding, job id was {job_id}")
 
             else:
                 # still running, wait a bit
