@@ -179,7 +179,7 @@ class Psiver:
         final_predictions = pd.read_csv(
             result_file,
             engine="python",
-            header=0,
+            header=None,
             skiprows=15,
             usecols=[0, 1, 2, 4],
             names=["check", "residue", "prediction", "score"],
