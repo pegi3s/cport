@@ -194,14 +194,14 @@ class Psiver:
                 interaction = False
             else:
                 interaction = True
-                # adds standardized score to positive residues
-                score = row.score
+            
+            score = row.score
 
             residue_number = row.residue
             if interaction:
                 prediction_dict["active"].append([int(residue_number), float(score)])
             elif not interaction:
-                prediction_dict["passive"].append(int(residue_number))
+                prediction_dict["passive"].append([int(residue_number), float(score)])
             else:
                 log.warning(
                     f"There appears that residue {row} is either empty or unprocessable"
